@@ -37,9 +37,9 @@ DebianInstall(){
 }
 
 checkInstallation(){
-	if [ ["$redhat" == *"rhel"* ]]
+	if [[ "$redhat" == *"rhel"* ]]
 	then
-		if !  [[ -z $(sudo systemctl status mariadb | grep "service not found")  ]]
+		if [[ -z $(sudo systemctl status mariadb | grep "service not found")  ]]
 		then
 			if [[ 1 -ge $(systemctl status mariadb.service | grep -c "running") ]]
 			then 			
@@ -49,7 +49,7 @@ checkInstallation(){
 			RedHatInstall	
 		fi
 		
-		if ! [[ -z $(systemctl status httpd | grep "service not found")  ]]
+		if [[ -z $(systemctl status httpd | grep "service not found")  ]]
 		then
 			if [[ 1 -ge $(systemctl status httpd.service | grep -c "running") ]]
 			then 			
@@ -62,26 +62,27 @@ checkInstallation(){
 
 		
 	else	
-		if !  [[ -z $(sudo systemctl status mysql | grep "service not found")  ]]
+		if [[ -z $(sudo systemctl status mysql | grep "service not found")  ]]
 		then
 			if [[ 1 -ge $(systemctl status mysql.service | grep -c "running") ]]
 			then 			
-				echo -e "Apache Service is Running"
+				echo -e "1Mysql Service is Running"
 			fi
-			echo -e "Mysql Service is Running\n\n"
-		else
-			DebianInstall
+			
+		#else
+			#DebianInstall
 		fi
 		
 		
-		if ! [[ -z $(systemctl status apache2 | grep "service not found")  ]]
+		if [[ -z $(systemctl status apache2 | grep "service not found")  ]]
 		then
 			if [[ 1 -ge $(systemctl status apache2.service | grep -c "running") ]]
 			then 			
-				echo -e "Apache Service is Running"
+				echo -e "2Apache Service is Running"
 			fi	
-		else
-			DebianInstall
+		#else
+			#DebianInstall
+		fi	
 	fi		
 }
 
@@ -95,13 +96,13 @@ if [ -z "$debian" ]
 then
 	echo -e "RedHat Distro Installing LAMP\n\n"
 	RedHatInstall
-elif [[$1 == 'install']]
+elif [[ "$1" == "install" ]]
 then
 	echo -e "Debian Distro Installing LAMP\n\n"
 	DebianInstall
-elif [[$1 == 'start']]
+
+elif [[ "$1" == "start" ]]
 then
 	checkInstallation
-	
 	
 fi		
