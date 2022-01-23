@@ -2,7 +2,7 @@
 # Fill our vars and run on cli
 # $ php -f db-connect-test.php
 
-$dbname = 'sgn';
+$dbname = 'mysql';
 $dbuser = 'root';
 $dbpass = 'root';
 $dbhost = 'localhost';

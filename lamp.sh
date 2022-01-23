@@ -22,3 +22,5 @@ cd testMysqlPhpConnection/
 
 php -f mysqlConnection.php
 
+
+
