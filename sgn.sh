@@ -97,7 +97,7 @@ checkInstallation(){
 
 			fi	
 		else
-			DebianInstall
+				DebianInstall
 		fi	
 	fi		
 }
