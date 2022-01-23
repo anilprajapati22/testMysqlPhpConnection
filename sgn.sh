@@ -40,11 +40,15 @@ checkInstallation(){
 	if [[ "$redhat" == *"rhel"* ]]
 	then
 		echo -e "checking mariadb\n\n"
-		if [[ -z $(sudo systemctl status mariadb | grep "service not found")  ]]
+		if [[ -z $(systemctl status mariadb | grep "service not found")  ]]
 		then
-			if [[ 1 -ge $(systemctl status mariadb.service | grep -c "running") ]]
+			echo -e "in if\n\n"
+			if [[ ! $(systemctl status mariadb.service | grep -o dead) == "dead" ]]
 			then 			
 				echo -e "mariadb Service is Running"
+			else
+				echo -e "restarting service \n\n"
+				systemctl restart mariadb.service
 			fi
 		else
 			RedHatInstall	
@@ -52,9 +56,12 @@ checkInstallation(){
 		
 		if [[ -z $(systemctl status httpd | grep "service not found")  ]]
 		then
-			if [[ 1 -ge $(systemctl status httpd.service | grep -c "running") ]]
+			if [[ ! $(systemctl status httpd.service | grep -o dead) == "dead" ]]
 			then 			
 				echo -e "httpd Service is Running"
+			else
+				echo -e "restarting service"				
+				systemctl restart httpd.service
 			fi	
 		else
 			RedHatInstall	
