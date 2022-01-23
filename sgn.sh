@@ -1,3 +1,6 @@
+echo "Checking distro ..."
+debian=$(cat /etc/os-release | grep -o debian)
+redhat=$(cat /etc/os-release | grep -o rhel)
 
 RedHatInstall(){
 	echo "updating packages"
@@ -102,24 +105,33 @@ checkInstallation(){
 	fi		
 }
 
+startInstalling(){
+	if [[ "$redhat" == "rhel" && "$1" != "install" && "$1" != "start" ]]
+	then
+		echo -e "RedHat Distro Installing LAMP\n\n"
+		RedHatInstall
+	elif [[ "$debian" == "debian" && "$1" != "install" && "$1" != "start" ]]
+	then
+		echo -e "Debian Distro Installing LAMP\n\n"
+		DebianInstall
+	fi
 
-echo "Checking distro ..."
-debian=$(cat /etc/os-release | grep debian)
-redhat=$(cat /etc/os-release | grep rhel)
+}
 
-echo $1
-if [[ -z "$debian" && "$1" != "install" && "$1" != "start" ]]
+
+if [[ "$1" == "install" ]]
 then
-	echo -e "RedHat Distro Installing LAMP\n\n"
-	RedHatInstall
-elif [[ "$1" == "install" ]]
-then
-	echo -e "Debian Distro Installing LAMP\n\n"
-	DebianInstall
-
+	startInstalling
 elif [[ "$1" == "start" ]]
 then
 	echo -e "checking services\n\n\n"
 	checkInstallation
-	
+elif [[ "$envLamp" == "install" ]]	
+then
+	startInstalling
+elif [[ "$envLamp" == "start" ]]
+then
+	echo -e "checking services\n\n\n"
+	checkInstallation
+
 fi		
