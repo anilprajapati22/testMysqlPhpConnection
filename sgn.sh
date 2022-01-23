@@ -93,7 +93,7 @@ debian=$(cat /etc/os-release | grep debian)
 redhat=$(cat /etc/os-release | grep rhel)
 
 echo $1
-if [ -z "$debian" ]
+if [[ -z "$debian" && "$1" != "install" && "$1" != "start" ]]
 then
 	echo -e "RedHat Distro Installing LAMP\n\n"
 	RedHatInstall
