@@ -1,10 +1,7 @@
-
-if [[ "$1" == "install"]]
-then
-	echo -e "Debian Distro Installing LAMP\n\n"
-
-elif [[ "$1" == "start" ]]
-then
-	echo -e "sgn "
-		
-fi		
+if [[ ! "$(systemctl status mariadb.service | grep -o running )" == "running" ]]
+then 			
+	echo -e "mariadb Service is Running"
+else
+	echo -e "restarting service"	
+	systemctl restart mariadb.service
+fi
