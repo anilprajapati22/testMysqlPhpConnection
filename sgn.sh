@@ -12,7 +12,7 @@ RedHatInstall(){
 
 	sudo systemctl restart httpd.service mariadb.service
 
-	sudo mysql_secure_installation
+	#sudo mysql_secure_installation
 
 	cd /var/www/html/
 
@@ -39,6 +39,7 @@ DebianInstall(){
 checkInstallation(){
 	if [[ "$redhat" == *"rhel"* ]]
 	then
+		echo "checking mariadb"
 		if [[ -z $(sudo systemctl status mariadb | grep "service not found")  ]]
 		then
 			if [[ 1 -ge $(systemctl status mariadb.service | grep -c "running") ]]
@@ -103,6 +104,7 @@ then
 
 elif [[ "$1" == "start" ]]
 then
+	echo "checking services"
 	checkInstallation
 	
 fi		
