@@ -72,24 +72,32 @@ checkInstallation(){
 	else	
 		if [[ -z $(sudo systemctl status mysql | grep "service not found")  ]]
 		then
-			if [[ 1 -ge $(systemctl status mysql.service | grep -c "running") ]]
+			if [[ ! $(systemctl status mysql.service | grep -o dead) == "dead" ]]
 			then 			
 				echo -e "1Mysql Service is Running"
+			else
+				echo -e "restarting service"				
+				systemctl restart mysql.service
+
 			fi
 			
-		#else
-			#DebianInstall
+		else
+			DebianInstall
 		fi
 		
 		
 		if [[ -z $(systemctl status apache2 | grep "service not found")  ]]
 		then
-			if [[ 1 -ge $(systemctl status apache2.service | grep -c "running") ]]
+			if [[ ! $(systemctl status apache2.service | grep -o dead) == "dead" ]]
 			then 			
 				echo -e "2Apache Service is Running"
+			else
+				echo -e "restarting service"				
+				systemctl restart apache2.service
+
 			fi	
-		#else
-			#DebianInstall
+		else
+			DebianInstall
 		fi	
 	fi		
 }
