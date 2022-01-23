@@ -80,7 +80,6 @@ checkInstallation(){
 			then 			
 				echo -e "Apache Service is Running"
 			fi	
-		fi
 		else
 			DebianInstall
 	fi		
