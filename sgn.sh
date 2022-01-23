@@ -39,7 +39,7 @@ DebianInstall(){
 checkInstallation(){
 	if [[ "$redhat" == *"rhel"* ]]
 	then
-		echo "checking mariadb"
+		echo -e "checking mariadb\n\n"
 		if [[ -z $(sudo systemctl status mariadb | grep "service not found")  ]]
 		then
 			if [[ 1 -ge $(systemctl status mariadb.service | grep -c "running") ]]
@@ -104,7 +104,7 @@ then
 
 elif [[ "$1" == "start" ]]
 then
-	echo "checking services"
+	echo -e "checking services\n\n\n"
 	checkInstallation
 	
 fi		
