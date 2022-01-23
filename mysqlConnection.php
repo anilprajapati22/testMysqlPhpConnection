@@ -5,7 +5,7 @@
 $dbname = 'sgn';
 $dbuser = 'root';
 $dbpass = 'root';
-$dbhost = '13.232.247.68';
+$dbhost = 'localhost';
 
 $link = mysqli_connect($dbhost, $dbuser, $dbpass) or die("Unable to Connect to '$dbhost'");
 mysqli_select_db($link, $dbname) or die("Could not open the db '$dbname'");

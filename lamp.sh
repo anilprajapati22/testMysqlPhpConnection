@@ -14,7 +14,11 @@ sudo systemctl restart httpd.service mariadb.service
 
 sudo mysql_secure_installation
 
+cd /var/www/html/
+
 git clone https://anilprajapati22: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@github.com/anilprajapati22/testMysqlPhpConnection.git
 
 cd testMysqlPhpConnection/
+
+php -f mysqlConnection.php
 
