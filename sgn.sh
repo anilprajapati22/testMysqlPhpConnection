@@ -144,7 +144,7 @@ then
 elif [[ "$1" == "backup" ]]	
 then 
 	echo -e "Tacking Backup of /var/lib/mysql directory\n\n"
-	backUp
+	bash backUp.sh
 
 elif [[ "$envLamp" == "install" ]]	
 then
