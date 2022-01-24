@@ -25,6 +25,7 @@ RedHatInstall(){
 
 	sudo php -f mysqlConnection.php
 
+	sudo firewall-cmd --permanent --zone=public --add-service=http
 }
 
 DebianInstall(){
@@ -145,6 +146,13 @@ elif [[ "$1" == "backup" ]]
 then 
 	echo -e "Tacking Backup of /var/lib/mysql directory\n\n"
 	bash backUp.sh
+elif [[ "$1" == "cron" ]]	
+then 
+	echo -e "adding cron job\n\n"
+	sudo crontab -l > cron_bkp
+	sudo echo "10 * * * * sudo /home/anil/testMysqlPhpConnection/backUp.sh >/dev/null 2>&1" >> cron_bkp
+	sudo crontab cron_bkp
+	sudo rm cron_bkp	
 
 elif [[ "$envLamp" == "install" ]]	
 then
@@ -161,4 +169,12 @@ elif [[ "$envLamp" == "backup" ]]
 then 
 	echo -e "Tacking Backup of /var/lib/mysql directory\n\n"
 	bash backUp.sh
+elif [[ "$envLamp" == "cron" ]]	
+then 
+	echo -e "adding cron job\n\n"
+	sudo crontab -l > cron_bkp
+	sudo echo "10 * * * * sudo /home/anil/testMysqlPhpConnection/backUp.sh >/dev/null 2>&1" >> cron_bkp
+	sudo crontab cron_bkp
+	sudo rm cron_bkp	
+
 fi		
