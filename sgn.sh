@@ -126,6 +126,7 @@ siteUp(){
 	else
 		echo -e "Service is not Running\n\n"
 		checkInstallation	
+	fi
 }
 
 if [[ "$1" == "install" ]]
