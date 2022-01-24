@@ -106,11 +106,11 @@ checkInstallation(){
 }
 
 startInstalling(){
-	if [[ "$redhat" == "rhel" && "$1" != "install" && "$1" != "start" && "$1" != "validate" ]]
+	if [[ "$redhat" == "rhel" && "$1" != "install" && "$1" != "start" && "$1" != "validate" && "$1" != "backup" ]]
 	then
 		echo -e "RedHat Distro Installing LAMP\n\n"
 		RedHatInstall
-	elif [[ "$debian" == "debian" && "$1" != "install" && "$1" != "start" && "$1" != "validate" ]]
+	elif [[ "$debian" == "debian" && "$1" != "install" && "$1" != "start" && "$1" != "validate" && "$1" != "backup" ]]
 	then
 		echo -e "Debian Distro Installing LAMP\n\n"
 		DebianInstall
@@ -129,6 +129,7 @@ siteUp(){
 	fi
 }
 
+
 if [[ "$1" == "install" ]]
 then
 	startInstalling
@@ -140,6 +141,11 @@ elif [[ "$1" == "validate" ]]
 then 
 	echo -e "Validating Site is Up\n\n"
 	siteUp
+elif [[ "$1" == "backup" ]]	
+then 
+	echo -e "Tacking Backup of /var/lib/mysql directory\n\n"
+	backUp
+
 elif [[ "$envLamp" == "install" ]]	
 then
 	startInstalling
@@ -151,5 +157,8 @@ elif [[ "$envLamp" == "validate" ]]
 then 
 	echo -e "Validating Site is Up\n\n"
 	siteUp
-
+elif [[ "$envLamp" == "backup" ]]	
+then 
+	echo -e "Tacking Backup of /var/lib/mysql directory\n\n"
+	bash backUp.sh
 fi		
