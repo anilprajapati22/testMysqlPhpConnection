@@ -148,9 +148,10 @@ then
 	bash backUp.sh
 elif [[ "$1" == "cron" ]]	
 then 
-	echo -e "adding cron job\n\n"
+	echo -e "adding cron job enter minute\n\n"
+	read m
 	sudo crontab -l > cron_bkp
-	sudo echo "10 * * * * sudo /home/anil/testMysqlPhpConnection/backUp.sh >/dev/null 2>&1" >> cron_bkp
+	sudo echo "$m * * * * sudo /home/anil/testMysqlPhpConnection/backUp.sh >/dev/null 2>&1" >> cron_bkp
 	sudo crontab cron_bkp
 	sudo rm cron_bkp	
 
