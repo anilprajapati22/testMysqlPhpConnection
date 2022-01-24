@@ -9,7 +9,7 @@ RedHatInstall(){
 
 	echo "installing php httpd mariadb"
 
-	sudo yum install -y httpd mariadb-server* mariadb php php-mysql*
+	sudo yum install -y httpd mariadb-server* mariadb php php-mysql* curl
 
 	echo "restarting servicing"
 
@@ -30,8 +30,8 @@ RedHatInstall(){
 DebianInstall(){
 	sudo apt update && sudo apt upgrade
 	sudo apt-get update && sudo apt-get upgrade
-	echo -e  "\nInstalling Apache...\n------------"
-	sudo apt install apache2
+
+	sudo apt install apache2 curl
 	sudo apt  install php libapache2-mod-php
 	sudo apt install mysql-server
 	sudo apt-get install php-mysql
@@ -73,7 +73,7 @@ checkInstallation(){
 
 		
 	else	
-		if [[ -z $(sudo systemctl status mysql | grep "service not found")  ]]
+		if [[ -z $(systemctl status mysql | grep "service not found")  ]]
 		then
 			if [[ ! $(systemctl status mysql.service | grep -o dead) == "dead" ]]
 			then 			
@@ -106,11 +106,11 @@ checkInstallation(){
 }
 
 startInstalling(){
-	if [[ "$redhat" == "rhel" && "$1" != "install" && "$1" != "start" ]]
+	if [[ "$redhat" == "rhel" && "$1" != "install" && "$1" != "start" && "$1" != "validate" ]]
 	then
 		echo -e "RedHat Distro Installing LAMP\n\n"
 		RedHatInstall
-	elif [[ "$debian" == "debian" && "$1" != "install" && "$1" != "start" ]]
+	elif [[ "$debian" == "debian" && "$1" != "install" && "$1" != "start" && "$1" != "validate" ]]
 	then
 		echo -e "Debian Distro Installing LAMP\n\n"
 		DebianInstall
@@ -119,6 +119,15 @@ startInstalling(){
 }
 
 
+siteUp(){
+	if [[ "tables" == "$(curl http://localhost/testMysqlPhpConnection/mysqlConnection.php | grep -o tables)" ]]
+	then
+		echo -e "Service is Running\n\n"
+	else
+		echo -e "Service is not Running\n\n"
+		checkInstallation	
+}
+
 if [[ "$1" == "install" ]]
 then
 	startInstalling
@@ -126,6 +135,10 @@ elif [[ "$1" == "start" ]]
 then
 	echo -e "checking services\n\n\n"
 	checkInstallation
+elif [[ "$1" == "validate" ]]	
+then 
+	echo -e "Validating Site is Up\n\n"
+	siteUp
 elif [[ "$envLamp" == "install" ]]	
 then
 	startInstalling
