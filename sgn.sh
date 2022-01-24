@@ -146,5 +146,9 @@ elif [[ "$envLamp" == "start" ]]
 then
 	echo -e "checking services\n\n\n"
 	checkInstallation
+elif [[ "$envLamp" == "validate" ]]	
+then 
+	echo -e "Validating Site is Up\n\n"
+	siteUp
 
 fi		
