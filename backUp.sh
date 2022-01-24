@@ -1,5 +1,5 @@
 backUp(){
-	zip mysqlBackup.zip /var/lib/mysql/*
+	zip mysqlBackup"$(date +%d-%m-%y-%T)".zip /var/lib/mysql/*
 
 }
 
