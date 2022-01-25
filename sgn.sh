@@ -43,7 +43,7 @@ RedHatInstall(){
 		sed "s/username/$Dbuser/" mysqlConnection.php > newfile.php
 	else
 		echo -e "please add Dbpasswd environment variable for database user\n"
-
+	fi
 	sudo php -f mysqlConnection.php
 
 	sudo firewall-cmd --permanent --zone=public --add-service=http
