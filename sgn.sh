@@ -1,6 +1,16 @@
-echo "Checking distro ..."
-debian=$(cat /etc/os-release | grep -o debian)
-redhat=$(cat /etc/os-release | grep -o rhel)
+#!/bin/bash
+
+checkDistro(){
+	echo "Checking distro ..."
+	debian=$(cat /etc/os-release | grep -o debian)
+	redhat=$(cat /etc/os-release | grep -o rhel)
+	if [[ "$redhat" == "rhel" ]]
+	then
+		return 1
+	else
+		return 0
+	fi		
+}
 
 RedHatInstall(){
 	echo "updating packages"
@@ -41,78 +51,42 @@ DebianInstall(){
 }
 
 checkInstallation(){
-	if [[ "$redhat" == *"rhel"* ]]
+	echo -e "checking $1\n"
+	if [[ -z $(systemctl status $1 | grep "service not found")  ]]
 	then
-		echo -e "checking mariadb\n\n"
-		if [[ -z $(systemctl status mariadb | grep "service not found")  ]]
-		then
-			echo -e "in if\n\n"
-			if [[ ! $(systemctl status mariadb.service | grep -o dead) == "dead" ]]
-			then 			
-				echo -e "mariadb Service is Running"
-			else
-				echo -e "restarting service \n\n"
-				systemctl restart mariadb.service
-			fi
+		if [[ ! $(systemctl status $1.service | grep -o dead) == "dead" ]]
+		then 		
+			echo -e "----------------------"	
+			echo -e "$1 Service is Running"
+			echo -e "----------------------"
 		else
-			RedHatInstall	
+			echo -e "----------------------"	
+			echo -e "$1 Service is Restarting"
+			echo -e "----------------------"
+			systemctl restart $1.service
 		fi
-		
-		if [[ -z $(systemctl status httpd | grep "service not found")  ]]
-		then
-			if [[ ! $(systemctl status httpd.service | grep -o dead) == "dead" ]]
-			then 			
-				echo -e "httpd Service is Running"
-			else
-				echo -e "restarting service"				
-				systemctl restart httpd.service
-			fi	
-		else
-			RedHatInstall	
-		fi
-		
+	else
+		startInstalling
+	fi
+}
 
-		
-	else	
-		if [[ -z $(systemctl status mysql | grep "service not found")  ]]
-		then
-			if [[ ! $(systemctl status mysql.service | grep -o dead) == "dead" ]]
-			then 			
-				echo -e "1Mysql Service is Running"
-			else
-				echo -e "restarting service"				
-				systemctl restart mysql.service
-
-			fi
-			
-		else
-			DebianInstall
-		fi
-		
-		
-		if [[ -z $(systemctl status apache2 | grep "service not found")  ]]
-		then
-			if [[ ! $(systemctl status apache2.service | grep -o dead) == "dead" ]]
-			then 			
-				echo -e "2Apache Service is Running"
-			else
-				echo -e "restarting service"				
-				systemctl restart apache2.service
-
-			fi	
-		else
-				DebianInstall
-		fi	
-	fi		
+stopService(){
+	echo -e "Stoping $1\n"
+	if [[ -z $(systemctl status $1 | grep "service not found")  ]]
+	then
+		systemctl stop $1.service
+	else
+		startInstalling
+	fi
 }
 
 startInstalling(){
-	if [[ "$redhat" == "rhel" && "$1" != "install" && "$1" != "start" && "$1" != "validate" && "$1" != "backup" ]]
+	checkDistro
+	if [[ $? == 1 ]]
 	then
 		echo -e "RedHat Distro Installing LAMP\n\n"
 		RedHatInstall
-	elif [[ "$debian" == "debian" && "$1" != "install" && "$1" != "start" && "$1" != "validate" && "$1" != "backup" ]]
-	then
+	else
 		echo -e "Debian Distro Installing LAMP\n\n"
 		DebianInstall
 	fi
@@ -123,60 +97,54 @@ startInstalling(){
 siteUp(){
 	if [[ "tables" == "$(curl http://localhost/testMysqlPhpConnection/mysqlConnection.php | grep -o tables)" ]]
 	then
-		echo -e "Service is Running\n\n"
+		echo -e "Service is Running\n"
 	else
-		echo -e "Service is not Running\n\n"
+		echo -e "Service is not Running\n"
 		checkInstallation	
 	fi
 }
 
 
-if [[ "$1" == "install" ]]
-then
-	startInstalling
-elif [[ "$1" == "start" ]]
-then
-	echo -e "checking services\n\n\n"
-	checkInstallation
-elif [[ "$1" == "validate" ]]	
-then 
-	echo -e "Validating Site is Up\n\n"
-	siteUp
-elif [[ "$1" == "backup" ]]	
-then 
-	echo -e "Tacking Backup of /var/lib/mysql directory\n\n"
-	bash backUp.sh
-elif [[ "$1" == "cron" ]]	
-then 
-	echo -e "adding cron job enter minute\n\n"
-	read m
-	sudo crontab -l > cron_bkp
-	sudo echo "$m * * * * sudo /home/anil/testMysqlPhpConnection/backUp.sh >/dev/null 2>&1" >> cron_bkp
-	sudo crontab cron_bkp
-	sudo rm cron_bkp	
+case "$1" in
+	"install") 
+		echo -e "Installing\n" 
+		startInstalling
+	;;
+	"start") 
+		echo -e "Cheking Installation\n" 
+		echo -e "checking services\n"
+		checkDistro
+		if [[ $? == 1 ]]
+		then
+			checkInstallation mariadb
+			checkInstallation httpd
+		else
+			checkInstallation mysql
+			checkInstallation apache2
+		fi
 
-elif [[ "$envLamp" == "install" ]]	
-then
-	startInstalling
-elif [[ "$envLamp" == "start" ]]
-then
-	echo -e "checking services\n\n\n"
-	checkInstallation
-elif [[ "$envLamp" == "validate" ]]	
-then 
-	echo -e "Validating Site is Up\n\n"
-	siteUp
-elif [[ "$envLamp" == "backup" ]]	
-then 
-	echo -e "Tacking Backup of /var/lib/mysql directory\n\n"
-	bash backUp.sh
-elif [[ "$envLamp" == "cron" ]]	
-then 
-	echo -e "adding cron job enter minute\n\n"
-	read m
-	sudo crontab -l > cron_bkp
-	sudo echo "$m * * * * sudo /home/anil/testMysqlPhpConnection/backUp.sh >/dev/null 2>&1" >> cron_bkp
-	sudo crontab cron_bkp
-	sudo rm cron_bkp	
+	;;
 
-fi		
+	"stop") 
+		stopService $2
+	;;
+
+	"validate") 
+		echo -e "validating service\n"
+		siteUp 
+		;;
+		"backup") 
+		echo "Tacking Backup\n"
+		bash backUp.sh 
+		;;
+		"cron") 
+		echo -e "adding cron job enter minute\n"
+		read m
+		sudo crontab -l > cron_bkp
+		sudo echo "$m * * * * /home/anil/testMysqlPhpConnection/backUp.sh >/dev/null 2>&1" >> cron_bkp
+		sudo crontab cron_bkp
+		sudo rm cron_bkp	
+
+   ;;
+
+esac
