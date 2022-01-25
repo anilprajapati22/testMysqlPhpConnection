@@ -45,7 +45,7 @@ RedHatInstall(){
 	else
 		echo -e "please add Dbpasswd environment variable for database user\n"
 	fi
-	sudo php -f mysqlConnection.php
+	sudo php -f sgn1.php
 
 }
 
