@@ -106,7 +106,7 @@ startInstalling(){
 
 
 siteUp(){
-	if [[ "tables" == "$(curl http://localhost/testMysqlPhpConnection/mysqlConnection.php | grep -o tables)" ]]
+	if [[ "tables" == "$(curl http://localhost/testMysqlPhpConnection/sgn1.php | grep -o tables)" ]]
 	then
 		echo -e "Service is Running\n"
 	else
