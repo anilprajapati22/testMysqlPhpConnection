@@ -35,7 +35,7 @@ RedHatInstall(){
 	
 	if [ ! -z "$Dbpasswd" ]
 	then
-		sed "s/username/$Dbpasswd/" mysqlConnection.php > sgn1.php
+		sed "s/passwd/$Dbpasswd/" mysqlConnection.php > sgn1.php
 	else
 		echo -e "please add Dbpasswd environment variable for database password\n"	
 	fi	
