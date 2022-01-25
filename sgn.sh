@@ -111,7 +111,16 @@ siteUp(){
 		echo -e "Service is Running\n"
 	else
 		echo -e "Service is not Running\n"
-		checkInstallation	
+		checkDistro
+		if [[ $? == 1 ]]
+		then
+			checkInstallation mariadb
+			checkInstallation httpd
+		else
+			checkInstallation mysql
+			checkInstallation apache2
+		fi
+	
 	fi
 }
 
