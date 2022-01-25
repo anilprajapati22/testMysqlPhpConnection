@@ -32,21 +32,21 @@ RedHatInstall(){
 	sudo git clone https://anilprajapati22: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@github.com/anilprajapati22/testMysqlPhpConnection.git
 
 	cd testMysqlPhpConnection/
+	
 	if [ ! -z "$Dbpasswd" ]
 	then
-		sed "s/username/$Dbpasswd/" mysqlConnection.php > mysqlConnection.php
+		sed "s/username/$Dbpasswd/" mysqlConnection.php > sgn1.php
 	else
 		echo -e "please add Dbpasswd environment variable for database password\n"	
 	fi	
 	if [ ! -z "$Dbuser" ]
 	then
-		sed "s/username/$Dbuser/" mysqlConnection.php > mysqlConnection.php
+		sed "s/username/$Dbuser/" mysqlConnection.php > sgn1.php
 	else
 		echo -e "please add Dbpasswd environment variable for database user\n"
 	fi
 	sudo php -f mysqlConnection.php
 
-	sudo firewall-cmd --permanent --zone=public --add-service=http
 }
 
 DebianInstall(){
