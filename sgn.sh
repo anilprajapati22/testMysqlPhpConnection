@@ -15,21 +15,21 @@ checkDistro(){
 RedHatInstall(){
 	echo "updating packages"
 
-	sudo yum update -y
+	yum update -y
 
 	echo "installing php httpd mariadb"
 
-	sudo yum install -y httpd mariadb-server* mariadb php php-mysql* curl
+	yum install -y httpd mariadb-server* mariadb php php-mysql* curl
 
 	echo "restarting servicing"
 
-	sudo systemctl restart httpd.service mariadb.service
+	systemctl restart httpd.service mariadb.service
 
-	#sudo mysql_secure_installation
+	# mysql_secure_installation
 
 	cd /var/www/html/
 
-	sudo git clone https://anilprajapati22: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@github.com/anilprajapati22/testMysqlPhpConnection.git
+	git clone https://anilprajapati22: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@github.com/anilprajapati22/testMysqlPhpConnection.git
 
 	cd testMysqlPhpConnection/
 	
@@ -45,19 +45,19 @@ RedHatInstall(){
 	else
 		echo -e "please add Dbpasswd environment variable for database user\n"
 	fi
-	sudo php -f sgn1.php
+	php -f sgn1.php
 
 }
 
 DebianInstall(){
-	sudo apt update && sudo apt upgrade
-	sudo apt-get update && sudo apt-get upgrade
+	apt update &&  apt upgrade
+	apt-get update &&  apt-get upgrade
 
-	sudo apt install apache2 curl
-	sudo apt  install php libapache2-mod-php
-	sudo apt install mysql-server
-	sudo apt-get install php-mysql
-	sudo apt-get install libapache2-mod-php
+	apt install apache2 curl
+	apt  install php libapache2-mod-php
+	apt install mysql-server
+	apt-get install php-mysql
+	apt-get install libapache2-mod-php
 
 }
 
@@ -160,10 +160,10 @@ case "$1" in
 		"cron") 
 		echo -e "adding cron job enter minute\n"
 		read m
-		sudo crontab -l > cron_bkp
-		sudo echo "$m * * * * /home/anil/testMysqlPhpConnection/backUp.sh >/dev/null 2>&1" >> cron_bkp
-		sudo crontab cron_bkp
-		sudo rm cron_bkp	
+		 crontab -l > cron_bkp
+		 echo "$m * * * * /home/anil/testMysqlPhpConnection/backUp.sh >/dev/null 2>&1" >> cron_bkp
+		 crontab cron_bkp
+		 rm cron_bkp	
 
    ;;
 
