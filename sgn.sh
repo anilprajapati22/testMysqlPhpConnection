@@ -34,13 +34,13 @@ RedHatInstall(){
 	cd testMysqlPhpConnection/
 	if [ ! -z "$Dbpasswd" ]
 	then
-		sed "s/username/$Dbpasswd/" mysqlConnection.php > newfile.php
+		sed "s/username/$Dbpasswd/" mysqlConnection.php > mysqlConnection.php
 	else
 		echo -e "please add Dbpasswd environment variable for database password\n"	
 	fi	
 	if [ ! -z "$Dbuser" ]
 	then
-		sed "s/username/$Dbuser/" mysqlConnection.php > newfile.php
+		sed "s/username/$Dbuser/" mysqlConnection.php > mysqlConnection.php
 	else
 		echo -e "please add Dbpasswd environment variable for database user\n"
 	fi
