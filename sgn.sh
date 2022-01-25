@@ -32,6 +32,17 @@ RedHatInstall(){
 	sudo git clone https://anilprajapati22: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@github.com/anilprajapati22/testMysqlPhpConnection.git
 
 	cd testMysqlPhpConnection/
+	if [ ! -z "$Dbpasswd" ]
+	then
+		sed "s/username/$Dbpasswd/" mysqlConnection.php > newfile.php
+	else
+		echo -e "please add Dbpasswd environment variable for database password\n"	
+	fi	
+	if [ ! -z "$Dbuser" ]
+	then
+		sed "s/username/$Dbuser/" mysqlConnection.php > newfile.php
+	else
+		echo -e "please add Dbpasswd environment variable for database user\n"
 
 	sudo php -f mysqlConnection.php
 
