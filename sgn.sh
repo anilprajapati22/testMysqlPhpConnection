@@ -124,47 +124,51 @@ siteUp(){
 	fi
 }
 
-
-case "$1" in
-	"install") 
-		echo -e "Installing\n" 
-		startInstalling
-	;;
-	"start") 
-		echo -e "Cheking Installation\n" 
-		echo -e "checking services\n"
-		checkDistro
-		if [[ $? == 1 ]]
-		then
-			checkInstallation mariadb
-			checkInstallation httpd
-		else
-			checkInstallation mysql
-			checkInstallation apache2
-		fi
-
-	;;
-
-	"stop") 
-		stopService $2
-	;;
-
-	"validate") 
-		echo -e "validating service\n"
-		siteUp 
+if [[ "$USER" == "root" ]]
+then
+	case "$1" in
+		"install") 
+			echo -e "Installing\n" 
+			startInstalling
 		;;
-		"backup") 
-		echo "Tacking Backup\n"
-		bash backUp.sh 
+		"start") 
+			echo -e "Cheking Installation\n" 
+			echo -e "checking services\n"
+			checkDistro
+			if [[ $? == 1 ]]
+			then
+				checkInstallation mariadb
+				checkInstallation httpd
+			else
+				checkInstallation mysql
+				checkInstallation apache2
+			fi
+
 		;;
-		"cron") 
-		echo -e "adding cron job enter minute\n"
-		read m
-		 crontab -l > cron_bkp
-		 echo "$m * * * * /home/anil/testMysqlPhpConnection/backUp.sh >/dev/null 2>&1" >> cron_bkp
-		 crontab cron_bkp
-		 rm cron_bkp	
 
-   ;;
+		"stop") 
+			stopService $2
+		;;
 
-esac
+		"validate") 
+			echo -e "validating service\n"
+			siteUp 
+			;;
+			"backup") 
+			echo "Tacking Backup\n"
+			bash backUp.sh 
+			;;
+			"cron") 
+			echo -e "adding cron job enter minute\n"
+			read m
+			crontab -l > cron_bkp
+			echo "$m * * * * /home/anil/testMysqlPhpConnection/backUp.sh >/dev/null 2>&1" >> cron_bkp
+			crontab cron_bkp
+			rm cron_bkp	
+
+	;;
+
+	esac
+else
+	echo "please login as root"
+fi	
