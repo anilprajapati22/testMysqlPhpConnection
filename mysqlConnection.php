@@ -3,8 +3,8 @@
 # $ php -f db-connect-test.php
 
 $dbname = 'mysql';
-$dbuser = 'username';
-$dbpass = 'passwd';
+$dbuser = getenv('Dbuser');
+$dbpass = getenv('Dbpasswd');
 $dbhost = 'localhost';
 
 $link = mysqli_connect($dbhost, $dbuser, $dbpass) or die("Unable to Connect to '$dbhost'");
@@ -23,5 +23,6 @@ if (!$tblCnt) {
   echo "There are no tables<br />\n";
 } else {
   echo "There are $tblCnt tables<br />\n";
+  echo 
 } 
 ?>
