@@ -39,19 +39,15 @@ RedHatInstall(){
 
 	cd testMysqlPhpConnection/
 	
-	if [ ! -z "$Dbpasswd" ]
+	if [ -z "$Dbpasswd" ]
 	then
-		sed "s/passwd/$Dbpasswd/" mysqlConnection.php > sgn1.php
-	else
 		echo -e "please add Dbpasswd environment variable for database password\n"	
 	fi	
-	if [ ! -z "$Dbuser" ]
+	if [ -z "$Dbuser" ]
 	then
-		sed "s/username/$Dbuser/" mysqlConnection.php > sgn1.php
-	else
 		echo -e "please add Dbpasswd environment variable for database user\n"
 	fi
-	php -f sgn1.php
+	php -f mysqlConnection.php
 
 }
 
@@ -69,22 +65,45 @@ DebianInstall(){
 
 checkInstallation(){
 	echo -e "checking $1\n"
-	if [[ -z $(systemctl status $1 | grep "service not found")  ]]
+	checkDistro
+	if [[ $? == 1 ]]
 	then
-		if [[ ! $(systemctl status $1.service | grep -o dead) == "dead" ]]
-		then 		
-			echo -e "----------------------"	
-			echo -e "$1 Service is Running"
-			echo -e "----------------------"
+		if [[ $(yum list --installed | grep $1 -c) -eq 0 ]]
+		then
+			if [[ ! $(systemctl status $1.service | grep -o dead) == "dead" ]]
+			then 		
+				echo -e "----------------------"	
+				echo -e "$1 Service is Running"
+				echo -e "----------------------"
+			else
+				echo -e "----------------------"	
+				echo -e "$1 Service is Restarting"
+				echo -e "----------------------"
+				systemctl restart $1.service
+			fi
 		else
-			echo -e "----------------------"	
-			echo -e "$1 Service is Restarting"
-			echo -e "----------------------"
-			systemctl restart $1.service
+			startInstalling
 		fi
+
 	else
-		startInstalling
+		if [[ $(apt list --installed | grep $1 -c) -eq 0 ]]
+		then
+			if [[ ! $(systemctl status $1.service | grep -o dead) == "dead" ]]
+			then 		
+				echo -e "----------------------"	
+				echo -e "$1 Service is Running"
+				echo -e "----------------------"
+			else
+				echo -e "----------------------"	
+				echo -e "$1 Service is Restarting"
+				echo -e "----------------------"
+				systemctl restart $1.service
+			fi
+		else
+			startInstalling
+		fi
 	fi
+	
 }
 
 stopService(){
