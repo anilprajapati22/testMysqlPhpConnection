@@ -35,7 +35,7 @@ RedHatInstall(){
 
 	cd /var/www/html/
 
-	git clone https://anilprajapati22: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@github.com/anilprajapati22/testMysqlPhpConnection.git
+	sudo git clone https://anilprajapati22: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@github.com/anilprajapati22/testMysqlPhpConnection.git
 
 	cd testMysqlPhpConnection/
 	
