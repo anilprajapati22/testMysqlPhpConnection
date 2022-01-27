@@ -68,7 +68,7 @@ checkInstallation(){
 	checkDistro
 	if [[ $? == 1 ]]
 	then
-		if [[ $(yum list --installed | grep $1 -c) -eq 0 ]]
+		if [[ ! $(yum list --installed | grep $1 -c) -eq 0 ]]
 		then
 			if [[ ! $(systemctl status $1.service | grep -o dead) == "dead" ]]
 			then 		
@@ -86,7 +86,7 @@ checkInstallation(){
 		fi
 
 	else
-		if [[ $(apt list --installed | grep $1 -c) -eq 0 ]]
+		if [[ ! $(apt list --installed | grep $1 -c) -eq 0 ]]
 		then
 			if [[ ! $(systemctl status $1.service | grep -o dead) == "dead" ]]
 			then 		
